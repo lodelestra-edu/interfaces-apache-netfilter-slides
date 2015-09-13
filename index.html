@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Administration système et virtualisation</title>
+
+    <meta name="description" content="cours de rappel d'administration système">
+    <meta name="author" content="Loïc Delestra">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" ></meta>
+    <!-- <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"> -->
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+        <h1>Administration système et virtualisation</h1>
+        </section>
+
+        <section>
+        <h4>Qui?</h4>
+        <h2>Loïc Delestra</h2>
+        <h4>travail</h4>
+        <h3>Ingenieur de recherche en securite mobile</h3><h3>LIMOS/Openium</h3>
+        <h4>Etudes</h4>
+        <h3>IUT de Clermont-Fd et ISIMA</h3>
+        <p>/*Le reste de mon CV est sur le net*/</p>
+        </section>
+
+        <section>
+        <h1>edu @ delestra.com</h1>
+
+        <h1></h1>
+        <p>@lodelestra</p>
+
+        </section>
+
+        <section>
+          <!-- <section data-background="img/calendar.jpg" class="invert-color"> -->
+          <section data-background="img/calendar.jpg">
+            <h1>programme</h1>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              1. Services de bases sous linux (rappels).
+              2. Virtualisation
+              3. (TP) Services de bases sous linux.
+              4. Installation d'un poste de dev.
+              5. Mise en prod d'une application web.
+              6. Utilisation de docker.
+            </script>
+          </section>
+        </section>
+
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+              # Configuration réseau
+            </script>
+          </section>
+
+          <section>
+            <h2>Configuration de l'interface réseau</h2>
+            <h3>Adresse IP</h3>
+            <pre><code data-trim>
+ifconfig < interface > < adresse ip >
+            </code></pre>
+
+            <pre><code data-trim>
+ifconfig eth0 192.168.1.2
+ifconfig eth0 192.168.1.12 netmask 255.255.255.128
+            </code></pre>
+            <h3>Routage</h3>
+            <pre><code data-trim>
+#Ajout d'un route
+route add default gw < adresse ip >
+#liste des routes
+route -n
+            </code></pre>
+          </section>
+          
+          <section>
+            <h3>Configuration automatique</h3>
+            <p>/etc/network/interfaces</p>
+            <pre><code data-trim>
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+  address 192.168.1.2
+  netmask 255.255.255.0
+  gateway 192.168.1.1
+            </code></pre>
+          </section>
+
+          <section>
+          <h2>Résolution de noms d'hôte</h2>
+          <p>/etc/host.conf</p>
+          <pre><code data-trim>
+# D'abord traduire avec les serveurs DNS et ensuite avec /etc/hosts.
+order bind,hosts
+          </code></pre>
+
+          <h3>Serveurs DNS</h3>
+          <p>/etc/resolv.conf</p>
+          <pre><code data-trim>
+nameserver 208.164.186.1
+nameserver 208.164.186.2
+          </code></pre>
+
+          <h3>fichier hosts</h3>
+          <p>/etc/hosts</p>
+          <pre><code data-trim>
+192.168.10.42 leon
+          </code></pre>
+          </section>
+        </section>
+
+
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+              # Apache
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ## ?
+              Apache est un serveur HTTP libre.
+              Il permet d'heberger des sites web avec des contenus statiques ou dynamiques.
+              <br>
+              - Statique: il fournis le fichier au client
+              - Dynamique: Le serveur execute un logiciel (module) qui genere le contenu
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ## Fichiers log
+              ### /var/log/apache2/
+              - /var/log/apache2/error.log
+              - /var/log/apache2/access.log
+            </script>
+          </section>
+          <section>
+            <h2>Configuration de base</h2>
+            <p>Pour demarrer arreter ou recharger la configuration</p>
+            <pre><code data-trim>
+              /etc/init.d/apache2 [start][stop][reload]
+            </code></pre>
+            
+            <p>fichier de configuration principal</p>
+            <pre><code data-trim>
+              /etc/apache2/apache2.conf
+            </code></pre>
+            <p>Contient des Include qui déplace des parties de configuration</p>
+          
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ### Serveur
+              /etc/apache2/apache2.conf
+              ### Modules
+              /etc/apache2/mods-available/
+              <br>
+              /etc/apache2/mods-enabled/
+              <br>
+              a2enmod a2dismod
+              ### sites
+              /etc/apache2/sites-available/
+              <br>
+              /etc/apache2/sites-enabled/
+              <br>
+              a2ensite a2dissite
+            </script>
+          </section>
+
+          <section>
+            <h2>Directives classiques</h2>
+            <h3>Les blocs</h3>     
+            <pre><code data-trim>
+<VirtualHost ...> # début de bloc VirtualHost
+  ...
+  <Directory ...> # début de bloc Directory
+     ...
+  </Directory>    # fin de bloc Directory
+  ...
+</VirtualHost>    # fin de bloc VirtualHost
+            </code></pre>
+
+            <h3>Les directives</h3>
+            <p>exemple:</p>
+            <pre><code data-trim>
+Include /etc/apache2/sites-enabled/
+            </code></pre>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ###Des directives
+              - **DocumentRoot < path>** :fixe la racine du serveur Web
+              - **DirectoryIndex < file>** : fichier par défaut
+              - **AccesFileName < name>** : définit le nom du fichier de configuration du répertoire
+              - **Listen** : indique le port à écouter
+              - **ServerName** : indique le nom de domaine
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ##Paramétrage des répertoires
+              - Le paramétrage d'un répertoire se met dans un bloc **< Directory >**
+              - La configuration s'applique au répertoire et à tous ses sous répertoires
+              - La configuration d'un sous-répertoire s'ajoute à celle du parent
+
+            </script>
+          </section>
+          <section>
+          <pre><code data-trim>
+# Configuration du répertoire racine du système
+< Directory />
+  # On n'autorise aucune option particulière
+  Options None
+
+  # Aucune modification n'est autorisé dans les fichiers .htaccess
+  AllowOverride None
+< /Directory>
+
+# Pour la racine du serveur:
+< Directory /var/www/html>
+  # Quelques options
+  Options Indexes Includes FollowSymLinks
+
+  # Les options peuvent être changées dans un .htaccess
+  AllowOverride All
+
+  # Permet à tout le monde d'accéder aux documents
+  Allow from All
+
+  # Spécifie comment appliquer la règle précédente
+  Order allow,deny
+< /Directory>
+
+# Le répertoire contenant des exécutables CGI
+< Directory /usr/lib/cgi-bin>
+  AllowOverride None
+  Options ExecCGI
+< /Directory>
+          </code></pre>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ##Serveurs virtuels
+              ###(virtual hosts)
+              Autorise la gestion de plusieurs sites web simultanément
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ### Comment ?
+              - même adresse ip
+              - même port (défaut 80)
+              - **noms de domaine différents**
+              <br>
+              <br>
+              exemple:
+              <br>
+              **www.devenir-riche.com** et **www.argentfacile.net**
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              Pour indiquer à Apache quel site correspond à un nom de domaine, on utilise une section < VirtualHost \*>.
+              <br>
+              <br>
+              Sous Debian, il y a généralement un fichier par section VirtualHost dans le répertoire ** /etc/apache2/sites-availiable **.
+            </script>
+          </section>
+
+          <section>
+          <pre><code data-trim contenteditable>
+< VirtualHost *>
+  ServerAdmin admin@devenir-riche.com
+  DocumentRoot /home/devenir-riche/racine
+  ServerName devenir-riche.com
+  ServerAlias www.devenir-riche.com
+  AccessLog /home/devenir-riche/access.log
+  ErrorLog /home/devenir-riche/error.log
+  < Directory /home/devenir-riche/racine>
+    AllowOverride All
+  < /Directory>
+< /VirtualHost>
+          </code></pre>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ## Site par défaut
+            </script>
+          </section>
+
+        </section>
+
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+              # Netfilter
+              ###firewall
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ##Filtrage
+              Netfilter permet de jeter ou de laisser passer les paquets qui entrent et qui sortent.
+              ###Trois chaînes principales:
+              - **INPUT** : les paquets à destination du système 
+              - **OUTPUT** : les paquets émis par les processus du système
+              - **FORWARD** :  les paquets que le système doit transmettre
+
+            </script>
+          </section>
+          <section data-markdown>
+            <script type="text/template">
+              ###Chaîne
+              Une chaîne est un ensemble de règles qui indiquent ce qu'il faut faire des paquets qui la traversent.
+              <br>
+              **Lorsqu'un paquet arrive dans une chaîne :**
+              1. Netfilter regarde la 1ère règle de la chaîne,
+              2. puis regarde si les critères de la règle correspondent au paquet.
+              3. Si le paquet correspond, la cible est exécutée (jeter le paquet, le laisser passer, etc.).
+              4. Sinon, Netfilter prend la règle suivante et la compare de nouveau au paquet. Et ainsi de suite jusqu'à la dernière règle.
+              5. Si aucune règle n'a interrompu le parcours de la chaîne, la politique par défaut est appliquée.
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ###Règles
+              - Une règles est une combinaison de critères et une cible.
+              - Lorsque **tous** les critères correspondent au paquet, le paquet est envoyé vers la cible.
+              - Les critères disponibles et les actions possibles dépendent de la chaîne manipulée.
+            </script>
+          </section>
+
+          <section>
+              <h2>Syntaxe</h2>
+              <pre><code data-trim>
+iptables [-t < table>] < commande> < options>
+              </code></pre>
+              <p>Liste des commandes cf tableau</p> 
+          </section>
+
+        </section>
+
+        <section>
+          <section data-markdown>
+            <script type="text/template">
+              ##Rappels sources:
+              <br>
+              https://fr.wikibooks.org/wiki/Administration_réseau_sous_Linux
+            </script>
+          </section>
+        </section>
+
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        slideNumber: true,
+
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+        { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+        { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+        { src: 'plugin/zoom-js/zoom.js', async: true },
+        { src: 'plugin/notes/notes.js', async: true }
+        ]
+        });
+
+      </script>
+
+  </body>
+</html>
