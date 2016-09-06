@@ -355,6 +355,13 @@ Include /etc/apache2/sites-enabled/
 
             </script>
           </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              <img src="img/Netfilter_schema_-_Filter_table_only.png" alt="">
+            </script>
+          </section>
+
           <section data-markdown>
             <script type="text/template">
               ###Chaîne
@@ -386,6 +393,54 @@ iptables [-t < table>] < commande> < options>
               <p>Liste des commandes cf tableau</p> 
           </section>
 
+          <section data-markdown>
+            <script type="text/template">
+              ##Liste des commandes
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              - `--list|-L [<chaîne>]` Affiche les règles contenues dans les chaînes ou seulement dans la chaîne sélectionnée.
+              - `--append|-A <chaîne> <critères> -j <cible>` Ajoute une règle à la fin de la chaîne < chaine>.
+              - `--insert|-I <chaîne> <critères> -j <cible>` Comme --append mais ajoute la règle au début de la chaîne.
+              - `--delete|-D <chaîne> <critères> -j <cible>` Supprime la règle correspondante de la chaîne.
+              - `--flush|-F [<chaîne>]` Efface toutes les règles de la chaîne. Si aucune chaîne n'est indiquée, toutes les chaînes de la table seront vidées.
+              - `--policy|-P <chaîne> <cible>` Détermine la cible lorsque qu'aucune règle n'a interrompu le parcours et que le paquet arrive en fin de chaîne.
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ##Liste des critères
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              - `--protocol|-p [!] <protocole>` Les protocoles possibles sont tcp, udp, icmp, all ou une valeur numérique. Les valeurs de /etc/protocols sont aussi utilisables
+              - `--source|-s [!] <adresse>[/<masque>]` L'adresse source est <adresse>. Le masque par défaut est /32.
+              - `--destination|-d [!] <adresse>[/<masque>]` item source mais pour la destination.
+              - `--dport [!] <port>` Le port destination est < port>.
+              - `--sport [!] <port>` Le port source est < port>.
+              - `-i <interface>` L'interface réseau d'où provient le paquet. N'est utilisable que dans la chaîne INPUT.
+              - `-o <interface>` L'interface réseau de laquelle va partir le paquet. N'est utilisable que dans les chaînes OUTPUT et FORWARD.
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              ##Liste des cibles 
+            </script>
+          </section>
+
+          <section data-markdown>
+            <script type="text/template">
+              - `-j ACCEPT` autorise le paquet à passer et interrompt son parcours de la chaîne.
+              - `-j DROP` Jette le paquet sans prévenir l'émetteur. Le parcours de la chaîne est interrompu.
+              - `-j REJECT` Comme DROP mais prévient l'émetteur que le paquet est rejeté.
+            </script>
+          </section>
         </section>
 
         <section>
