@@ -282,6 +282,19 @@ Include /etc/apache2/sites-enabled/
           </code></pre>
           </section>
 
+          <section>
+          <h3>Order</h3>
+          <strong>Allow,Deny :</strong>
+          Toutes les directives Allow sont évaluées en premier ; l'une d'elles au moins doit convenir, faute de quoi la requête sera rejetée.
+          Vient ensuite le tour des directives Deny. Si l'une au moins convient, le requête est rejetée.
+          Enfin, toute requête à laquelle ne convient aucune directive Allow ou Deny sera rejetée par défaut.'
+          <br>
+          <br>
+          <strong>Deny,Allow</strong>
+          Toutes les directives Deny sont évaluées en premier ; si l'une au moins convient, le requête est rejetée, sauf si une directive Allow convient aussi.
+          Enfin, toute requête à laquelle ne convient aucune directive Allow ou Deny aura l'autorisation d'accès par défaut.'
+          </section>
+
           <section data-markdown>
             <script type="text/template">
               ##Serveurs virtuels
