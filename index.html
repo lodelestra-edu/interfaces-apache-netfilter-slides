@@ -120,6 +120,7 @@ iface eth0 inet static
   address 192.168.1.2
   netmask 255.255.255.0
   gateway 192.168.1.1
+  # dns-nameservers 12.34.56.78 12.34.56.79
             </code></pre>
           </section>
 
@@ -261,7 +262,7 @@ Include /etc/apache2/sites-enabled/
 # Pour la racine du serveur:
 < Directory /var/www/html>
   # Quelques options
-  Options Indexes Includes FollowSymLinks
+  Options Indexes FollowSymLinks
 
   # Les options peuvent être changées dans un .htaccess
   AllowOverride All
